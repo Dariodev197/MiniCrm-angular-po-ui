@@ -1,0 +1,29 @@
+@if(isLoading){
+    <po-loading-overlay p-text="Buscando Produtos..."></po-loading-overlay>
+}
+    
+<po-page-list p-title="Product List" [p-filter]="filterSettings">
+    <po-list-view
+        [p-items]="productListFiltered"
+        [p-actions]="productAction"
+        p-property-title="nome"
+    >
+        <ng-template p-list-view-content-template let-product>
+            <div class="po-row">
+                <po-info class="po-sm-12 po-md-12 po-lg-2 po-xl-2" p-label="Nome" [p-value]="product.nome"/>
+                <po-info class="po-sm-12 po-md-4 po-lg-2 po-xl-2" p-label="Codigo" [p-value]="product.codigo"/>
+                <po-info class="po-sm-12 po-md-4 po-lg-2 po-xl-2" p-label="Categoria" [p-value]="product.categoria"/>
+                <po-info class="po-sm-12 po-md-4 po-lg-2 po-xl-2" p-label="Preco" [p-value]="product.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })"/>
+            </div>
+        </ng-template>
+       
+        <ng-template p-list-view-detail-template let-product>
+            <div class="po-row">
+                <po-info class="po-sm-12 po-md-6 po-lg-4 po-xl-4" p-label="Un.Medida" [p-value]="product.um"/>
+                <po-number p-label="Quantidade"[(ngModel)]="product.quantidade" [p-min]="1" name="quantidade"/>
+                
+            
+        </div>
+        </ng-template>
+    </po-list-view>
+</po-page-list>

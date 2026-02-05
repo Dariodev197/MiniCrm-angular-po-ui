@@ -1,0 +1,40 @@
+@if(isLoading){
+<po-loading-overlay p-text="Buscando clientes..."></po-loading-overlay>
+}
+
+
+<po-page-list p-title="Customer List" [p-filter]=" filterStettings">
+
+    <po-list-view p-property-title="nome"
+                  [p-items]="customelistFiltred"
+                  (p-title-action)="showDetail($event)">
+
+
+        <ng-template p-list-view-content-template let-customer>
+            <div class="po-row">
+                <po-info class="po-sm-10 po-md-2 po-lg-2 po-xl-2" p-label="codigo" [p-value]="customer.codigo" />
+                <po-info class="po-sm-2 po-md-2 po-lg-2 po-xl-2" p-label="Loja" [p-value]="customer.loja" />
+                <po-info class="po-sm-12 po-md-4 po-lg-3 po-xl-2" p-label="Endereco" [p-value]="customer.endereco" />
+                <po-info class="po-sm-12 po-md-4 po-lg-3 po-xl-2" p-label="Telefone" [p-value]="customer.telefone" />
+                <po-info class="po-sm-12 po-md-4 po-lg-3 po-xl-2" p-label="Email" [p-value]="customer.email" />
+            </div>
+        </ng-template>
+
+    </po-list-view>
+    <po-modal #modalCustomer [p-title]="detailCustomer.nome">
+        <div class="po-row">
+            <po-info class="po-sm-10 po-md-2 po-lg-2 po-xl-2" p-label="codigo" [p-value]="detailCustomer.codigo" />
+            <po-info class="po-sm-2 po-md-2 po-lg-2 po-xl-2" p-label="Loja" [p-value]="detailCustomer.loja" />
+        </div>
+
+        <div class="po-row">
+            <po-info class="po-sm-12 po-md-4 po-lg-3 po-xl-2" p-label="Endereco" [p-value]="detailCustomer.endereco" />
+            <po-info class="po-sm-12 po-md-4 po-lg-3 po-xl-2" p-label="Telefone" [p-value]="detailCustomer.telefone" />
+        </div>
+        <div class="po-row">
+            <po-info class="po-sm-12 po-md-4 po-lg-3 po-xl-4" p-label="Status" [p-value]="detailCustomer.status" />
+            <po-info class="po-sm-12 po-md-8 po-lg-3 po-xl-8" p-label="Email" [p-value]="detailCustomer.email" />
+        </div>
+    </po-modal>
+
+</po-page-list>

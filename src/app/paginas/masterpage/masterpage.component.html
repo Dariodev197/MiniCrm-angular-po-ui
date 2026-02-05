@@ -1,0 +1,46 @@
+<div class="po-wrapper-menu-panel">
+    <po-menu-panel [p-menus]="menus" 
+     p-logo="https://po-ui.io/assets/po-logos/po_color_bg.svg">
+    </po-menu-panel>
+     <po-page-default [p-title] = "title" 
+     [p-actions]="actions"> 
+     <router-outlet></router-outlet>
+        
+     </po-page-default>
+</div>
+<po-page-slide #slideCart p-title="Carrinho" p-size="sm">
+    <div class="po-row">
+        <po-info class="po-sm-8"p-label='Valor total' [p-value]='this.valueCart.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})'/>
+        <po-button class="po-sm-4" p-label="Confirmar" (p-click)="clickConfirmCart()" p-kind="primary"/>
+    </div>
+    <po-divider p-label="ITENS"/>
+    @for(li of cart.itens; track li){
+        @if(li.ativo){
+            <div class="po-row">
+                <po-info [p-orientation]="orientation" class="po-sm-11" p-label="item" [p-value]="li.id.toString()"/>
+                <i class="po-sm-1 po-icon po-icon-delete" (click)="clickDelItemCart(li)" style="cursor: pointer;"></i>
+                <po-info class="po-sm-12" [p-value]="li.item.nome"/>
+                <po-info [p-orientation]="orientation"  class="po-sm-12" p-label="Quantidade" [p-value]="li.item.quantidade.toString()"/>
+                <po-info [p-orientation]="orientation"  class="po-sm-12" p-label="Preco" [p-value]="li.item.preco.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})    "/>
+                <po-info [p-orientation]="orientation"  class="po-sm-12" p-label="Valor" [p-value]="(li.item.quantidade * li.item.preco).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})"/>
+        </div>
+            <po-divider/>
+        }
+    }
+</po-page-slide>
+
+<po-modal #modalCustomer p-title="Select o Customer">
+    <div class="po-row">
+        <po-combo #comboCustomer
+            name="comboCustomer"
+            class="po-md-12"
+            p-placeholder="Selecione o Customer"
+            [p-filter-service]="urlfiltercustomer"
+            p-field-label="nome"
+            p-field-value="codigo"
+            ></po-combo>
+    </div>
+    <script>
+        console.log(urlfiltercustomer);
+    </script>
+</po-modal>
