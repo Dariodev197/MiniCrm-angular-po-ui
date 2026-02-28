@@ -1,108 +1,166 @@
 
 import { Component, inject, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { 
-    PoMenuModule, 
+import {
+    PoMenuModule,
     PoMenuPanelItem,
     PoMenuPanelModule,
-    PoPageModule, 
-    PoInfoModule, 
-    PoPageSlideModule, 
-    PoDividerModule, 
-    PoInfoOrientation, 
-    PoNotificationService, 
-    PoModalModule, 
+    PoPageModule,
+    PoInfoModule,
+    PoPageSlideModule,
+    PoDividerModule,
+    PoInfoOrientation,
+    PoNotificationService,
+    PoModalModule,
     PoFieldModule,
-    PoModalComponent} from '@po-ui/ng-components';
+    PoModalComponent,
+    PoComboComponent,
+    PoNotification,
+    PoDialogService,
+    PoLoadingModule
+} from '@po-ui/ng-components';
 import { PoPageAction } from '@po-ui/ng-components';
 import { PoPageSlideComponent } from '@po-ui/ng-components';
 import { PoButtonModule } from '@po-ui/ng-components';
-import { CartService }  from '../../services/cart.service';
+import { CartService } from '../../services/cart.service';
 import { Subscription } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Cart, ItemCart } from '../../classes/cart';
 import { environment } from '../../../environments/environment';
+import { CustomerService } from '../../services/customer.service';
+import { Customer } from '../../classes/customer';
 
 @Component({
-  selector: 'app-masterpage',
-  standalone: true,
-  imports: [
-            PoMenuModule, 
-            PoMenuPanelModule, 
-            PoPageModule,
-            RouterModule, 
-            PoInfoModule,
-            PoPageSlideModule,
-            PoButtonModule, 
-            PoDividerModule, 
-            PoModalModule,
-            PoFieldModule],
-  templateUrl: './masterpage.component.html',
-  styleUrl: './masterpage.component.css'
+    selector: 'app-masterpage',
+    standalone: true,
+    imports: [
+        PoMenuModule,
+        PoMenuPanelModule,
+        PoPageModule,
+        RouterModule,
+        PoInfoModule,
+        PoPageSlideModule,
+        PoButtonModule,
+        PoDividerModule,
+        PoModalModule,
+        PoFieldModule,
+        PoLoadingModule],
+    templateUrl: './masterpage.component.html',
+    styleUrl: './masterpage.component.css'
 })
-export class MasterpageComponent implements OnDestroy{
+export class MasterpageComponent implements OnDestroy {
     public title: string = 'home'
     #CartService = inject(CartService)
-    #notyfy = inject(PoNotificationService)
+    #notify = inject(PoNotificationService)
+    #customerService = inject(CustomerService)
     valueCart$ = this.#CartService.getcartValue();
+    #dialog = inject(PoDialogService)
     valueCart: number = 0;
     cart$ = this.#CartService.getCart();
     cart: Cart = new Cart()
+    listcustomer$ = this.#customerService.getCustomerList();
+    listcustomer: any
+    customerSelected$ = this.#customerService.getCustomerSelected();
+    customerSelected: Customer = new Customer();
     sub = new Subscription()
-    orientation : PoInfoOrientation = PoInfoOrientation.Horizontal
+    orientation: PoInfoOrientation = PoInfoOrientation.Horizontal
+    hiddenOverlayCart$ = this.#CartService.getHiddenLoading();
+    hiddenOverlayCart: boolean = true;
     urlfiltercustomer: string = `${environment.url}/curso/tabelas/sa1`;
-    
 
+    @ViewChild('slideCart') slideCart !: PoPageSlideComponent;
+    @ViewChild('comboCustomer') comboCustomerEl !: PoComboComponent
     @ViewChild('modalCustomer') modalCustomerEl !: PoModalComponent;
-    
-    constructor(){
+
+    constructor() {
         const subValue = this.valueCart$.subscribe(vlr => this.valueCart = vlr);
         const subCart = this.cart$.subscribe(cart => this.cart = cart);
+        const subList = this.listcustomer$.subscribe(list => this.listcustomer = list);
+        const subCustomer = this.customerSelected$.subscribe(cust => this.customerSelected = cust);
+        const subHidden = this.hiddenOverlayCart$.subscribe(hidden => this.hiddenOverlayCart = hidden);
         this.sub.add(subValue);
         this.sub.add(subCart);
-
+        this.sub.add(subList);
+        this.sub.add(subCustomer);
+        this.sub.add(subHidden);
     }
 
-    ngOnDestroy(): void{
+    ngOnDestroy(): void {
         this.sub.unsubscribe();
     }
 
     readonly menus: Array<PoMenuPanelItem> = [
-         { label: 'Home', link: 'home', action: this.clickItemMenu.bind(this), icon: 'po-icon po-icon-home' },
-         { label: 'Customers', link: 'customers', action: this.clickItemMenu.bind(this), icon: 'po-icon po-icon-users' },
-         { label: 'Products', link: 'catalag', action: this.clickItemMenu.bind(this), icon: 'po-icon po-icon-grid' },
-         { label: 'Budgets', link: 'budget', action: this.clickItemMenu.bind(this), icon: 'po-icon po-icon-pushcart' },
-         { label: 'Exit', link: 'logof', action: this.clickItemMenu.bind(this), icon: 'po-icon po-icon-exit' },
+        { label: 'Home', link: 'home', action: this.clickItemMenu.bind(this), icon: 'po-icon po-icon-home' },
+        { label: 'Customers', link: 'customers', action: this.clickItemMenu.bind(this), icon: 'po-icon po-icon-users' },
+        { label: 'Products', link: 'catalag', action: this.clickItemMenu.bind(this), icon: 'po-icon po-icon-grid' },
+        { label: 'Budgets', link: 'budget', action: this.clickItemMenu.bind(this), icon: 'po-icon po-icon-pushcart' },
+        { label: 'Exit', link: 'logof', action: this.clickItemMenu.bind(this), icon: 'po-icon po-icon-exit' },
     ]
     readonly actions: Array<PoPageAction> = [
-        {label:'Cart', action:this.clickOpenCart.bind(this), icon:'po-icon po-icon-cart'},
-        {label: 'Select Customer', action: () => this.modalCustomerEl.open(), icon:'po-icon po-icon-user'},
+        { label: 'Cart', action: this.clickOpenCart.bind(this), icon: 'po-icon po-icon-cart' },
+        { label: 'Select Customer', action: () => this.modalCustomerEl.open(), icon: 'po-icon po-icon-user' },
     ]
-    
-    @ViewChild('slideCart') slideCart !: PoPageSlideComponent;
-   
+
+
+
     clickItemMenu(menu: PoMenuPanelItem): void {
         this.title = menu.label as string;
 
     }
-    clickOpenCart():void{
+    clickOpenCart(): void {
         this.slideCart.open();
 
     }
-    clickDelItemCart(item: ItemCart):void{
+    clickDelItemCart(item: ItemCart): void {
         item.ativo = false;
-        if(this.#CartService.updateCart()) {
-            this.#notyfy.setDefaultDuration(1000);
-            this.#notyfy.success('Item removido do carrinho com sucesso!');
-        }else{
-            this.#notyfy.setDefaultDuration(1000);
-            this.#notyfy.error('Erro ao remover item do carrinho!');
+        if (this.#CartService.updateCart()) {
+            let isSenCart: boolean = this.#CartService.sendCartERP();
+            this.#notify.setDefaultDuration(1000);
+            this.#notify.success('Item removido do carrinho com sucesso!');
+        } else {
+            this.#notify.setDefaultDuration(1000);
+            this.#notify.error('Erro ao remover item do carrinho!');
         }
 
     }
-   
-        clickConfirmCart():void{
+    confirmaModal(): void {
+        let codigo: string = this.comboCustomerEl.selectedValue;
+        let nome: string = '';
+        let customerSelected: Customer = new Customer;
+        let notify: PoNotification = {
+            message: 'nenhum cliente selecionado',
+            duration: 1500,
+            
+        }
 
+        console.log('combo', codigo, nome);
+
+        if (codigo) {
+            nome = this.comboCustomerEl.selectedOption.label;
+            this.listcustomer.forEach((customer: Customer) => {
+                if (customer.codigo === codigo && customer.nome === nome) {
+                    customerSelected = customer;
+                    notify.message = `Novo Cliente Selecionado: ${customer.nome}`;
+
+                }
+            })
+        }
+        this.#customerService.setCustomerSelected(customerSelected);
+        this.#notify.information(notify)
+        this.#CartService.getCartERP();
+        this.modalCustomerEl.close();
+
+    }
+
+
+    clickConfirmCart(): void {
+        let isConfirmaCart: boolean = false;
+        this.#dialog.confirm({
+            title: 'Confirmar Compra',
+            message: 'Deseja confirmar a compra?',
+            confirm:() => {isConfirmaCart = this.#CartService.confirmeCartErp()},
+            cancel:() => {console.log('Cliclou em cancelar')}
+        })
     }
 
 }

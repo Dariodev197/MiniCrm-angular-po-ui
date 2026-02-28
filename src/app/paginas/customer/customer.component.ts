@@ -48,6 +48,7 @@ export class CustomerComponent implements OnInit {
     });
     this.customerList = itens;
     this.customelistFiltred = itens;
+    this.#customerService.setCustomerList(itens);
     
     //setTimeout(() => this.isLoading = false, 2000); 
 

@@ -2,14 +2,18 @@
     <po-menu-panel [p-menus]="menus" 
      p-logo="https://po-ui.io/assets/po-logos/po_color_bg.svg">
     </po-menu-panel>
-     <po-page-default [p-title] = "title" 
+     <po-page-default [p-title]="customerSelected.nome"
      [p-actions]="actions"> 
      <router-outlet></router-outlet>
         
      </po-page-default>
 </div>
-<po-page-slide #slideCart p-title="Carrinho" p-size="sm">
+<po-page-slide #slideCart p-title="Carrinho" p-size="sm" style="position: relative;">
+    <po-loading-overlay [hidden]="hiddenOverlayCart" p-text="Aguarde" [p-screen-lock]="false"/>
+
     <div class="po-row">
+        @if(this.cart.codigo){
+             <po-info class="po-sm-12" p-label='Codigo do carrinho' [p-value]="this.cart.codigo"/>}
         <po-info class="po-sm-8"p-label='Valor total' [p-value]='this.valueCart.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})'/>
         <po-button class="po-sm-4" p-label="Confirmar" (p-click)="clickConfirmCart()" p-kind="primary"/>
     </div>
@@ -39,8 +43,11 @@
             p-field-label="nome"
             p-field-value="codigo"
             ></po-combo>
+            <script>
+                  console.log(urlfiltercustomer);
+            </script>
     </div>
-    <script>
-        console.log(urlfiltercustomer);
-    </script>
+    <po-modal-footer>
+        <po-button p-label="Confirmar" p-kind="primary"(p-click)="confirmaModal()"/>
+    </po-modal-footer>     
 </po-modal>
