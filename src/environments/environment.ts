@@ -1,4 +1,4 @@
 export const environment = {
     ambiente: 'prod',
-    url:'https:/srverp:2200/api'
+    url:'https://srverp:2200/api'
 };
