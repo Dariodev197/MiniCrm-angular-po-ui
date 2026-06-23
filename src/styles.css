@@ -1,1 +1,20 @@
-/* You can add global styles to this file, and also import other style files */
+:root{
+    --color-toolbar-background-color-toolbar: #010005;
+    --color-toolbar-color-title: #fff;
+
+}
+
+po-menu{
+    --background-color: #010005;
+    --border-color: transparent;
+    --border-radius: 0px;
+}
+
+po-menu-item{
+    --color: #fff;
+    --background-color: transparent;
+    --border-color: transparent;
+    --border-radius: 0px;
+    --hover-color: #a13f55;
+  
+}

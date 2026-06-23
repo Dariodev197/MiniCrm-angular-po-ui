@@ -7,7 +7,7 @@ export class Product {
     quantidade: number;
     status: string;
 
-    constructor(){
+    constructor() {
         this.codigo = ' ';
         this.nome = ' ';
         this.categoria = ' ';

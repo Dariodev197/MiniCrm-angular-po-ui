@@ -1,1 +1,9 @@
-<p>loginfpage works!</p>
+<po-page-login
+    p-logo="logo.png"  
+    #LoginPage
+    p-background="public.jpg"
+    (p-login-submit)="confirmLogin(LoginPage)"
+
+/>
+<po-loading-overlay
+    [hidden]="isHiddenLoading" p-text="Efetuando Login.."/>

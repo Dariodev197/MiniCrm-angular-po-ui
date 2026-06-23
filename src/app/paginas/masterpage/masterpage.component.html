@@ -1,53 +1,60 @@
-<div class="po-wrapper-menu-panel">
-    <po-menu-panel [p-menus]="menus" 
-     p-logo="https://po-ui.io/assets/po-logos/po_color_bg.svg">
-    </po-menu-panel>
-     <po-page-default [p-title]="customerSelected.nome"
-     [p-actions]="actions"> 
-     <router-outlet></router-outlet>
-        
-     </po-page-default>
+<div class="po-wrapper">
+    <po-toolbar [p-title]="customerSelected.nome" [p-actions]="actions" p-actions-icon="an an-shopping-cart-simple"/>
+    <po-menu 
+    p-short-logo="logocrm.png" 
+    [p-menus]="menus" 
+    [p-collapsed]="true">
+
+        <div *p-menu-header-template>
+            <img src="logocrm.png" id="logo" />
+            <p class="po-p-1 po-font-title" style="color: white;">{{ profile.name }} </p>
+            <p class="po-p-1 po-font-subtitle" style="color: white;">{{ profile.coduser }} </p>
+        </div>
+    </po-menu>
+
+
+    <router-outlet />
+
+
 </div>
 <po-page-slide #slideCart p-title="Carrinho" p-size="sm" style="position: relative;">
-    <po-loading-overlay [hidden]="hiddenOverlayCart" p-text="Aguarde" [p-screen-lock]="false"/>
+    <po-loading-overlay [hidden]="hiddenOverlayCart" p-text="Aguarde" [p-screen-lock]="false" />
 
     <div class="po-row">
         @if(this.cart.codigo){
-             <po-info class="po-sm-12" p-label='Codigo do carrinho' [p-value]="this.cart.codigo"/>}
-        <po-info class="po-sm-8"p-label='Valor total' [p-value]='this.valueCart.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})'/>
-        <po-button class="po-sm-4" p-label="Confirmar" (p-click)="clickConfirmCart()" p-kind="primary"/>
+        <po-info class="po-sm-12" p-label='Codigo do carrinho' [p-value]="this.cart.codigo" />}
+        <po-info class="po-sm-8" p-label='Valor total'
+            [p-value]='this.valueCart.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})' />
+        <po-button class="po-sm-4" p-label="Confirmar" (p-click)="clickConfirmCart()" p-kind="primary" />
     </div>
-    <po-divider p-label="ITENS"/>
-    @for(li of cart.itens; track li){
-        @if(li.ativo){
-            <div class="po-row">
-                <po-info [p-orientation]="orientation" class="po-sm-11" p-label="item" [p-value]="li.id.toString()"/>
-                <i class="po-sm-1 po-icon po-icon-delete" (click)="clickDelItemCart(li)" style="cursor: pointer;"></i>
-                <po-info class="po-sm-12" [p-value]="li.item.nome"/>
-                <po-info [p-orientation]="orientation"  class="po-sm-12" p-label="Quantidade" [p-value]="li.item.quantidade.toString()"/>
-                <po-info [p-orientation]="orientation"  class="po-sm-12" p-label="Preco" [p-value]="li.item.preco.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})    "/>
-                <po-info [p-orientation]="orientation"  class="po-sm-12" p-label="Valor" [p-value]="(li.item.quantidade * li.item.preco).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})"/>
-        </div>
-            <po-divider/>
-        }
+    <po-divider p-label="ITENS" />
+    @for(li of cart.itens; track li.id){
+    @if(li.ativo){
+    <div class="po-row">
+        <po-info [p-orientation]="orientation" class="po-sm-11" p-label="item" [p-value]="li.id.toString()" />
+        <i class="po-sm-1 po-icon po-icon-delete" (click)="clickDelItemCart(li)" style="cursor: pointer;"></i>
+        <po-info class="po-sm-12" [p-value]="li.item.nome" />
+        <po-info [p-orientation]="orientation" class="po-sm-12" p-label="Quantidade"
+            [p-value]="li.item.quantidade.toString()" />
+        <po-info [p-orientation]="orientation" class="po-sm-12" p-label="Preco"
+            [p-value]="li.item.preco.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})    " />
+        <po-info [p-orientation]="orientation" class="po-sm-12" p-label="Valor"
+            [p-value]="(li.item.quantidade * li.item.preco).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})" />
+    </div>
+    <po-divider />
+    }
     }
 </po-page-slide>
 
 <po-modal #modalCustomer p-title="Select o Customer">
     <div class="po-row">
-        <po-combo #comboCustomer
-            name="comboCustomer"
-            class="po-md-12"
-            p-placeholder="Selecione o Customer"
-            [p-filter-service]="urlfiltercustomer"
-            p-field-label="nome"
-            p-field-value="codigo"
-            ></po-combo>
-            <script>
-                  console.log(urlfiltercustomer);
-            </script>
+        <po-combo #comboCustomer name="comboCustomer" class="po-md-12" p-placeholder="Selecione o Customer"
+            [p-filter-service]="urlfiltercustomer" p-field-label="nome" p-field-value="codigo"></po-combo>
+        <script>
+            console.log(urlfiltercustomer);
+        </script>
     </div>
     <po-modal-footer>
-        <po-button p-label="Confirmar" p-kind="primary"(p-click)="confirmaModal()"/>
-    </po-modal-footer>     
+        <po-button p-label="Confirmar" p-kind="primary" (p-click)="confirmaModal()" />
+    </po-modal-footer>
 </po-modal>

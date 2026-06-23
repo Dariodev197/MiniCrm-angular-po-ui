@@ -1,0 +1,15 @@
+<po-page-dynamic-table 
+ #pageProspects
+ p-title="Pagina de Prospects"
+ [p-breadcrumb]="{items:[{label: 'Home', link:'/home'},{label: 'Prospects'}]}"
+ [p-fields]="fields"
+ [p-service-api]="url"
+ [p-actions]="actions"
+ [p-table-custom-actions]="tableActions"
+/>
+
+<po-modal #ProspectDetailModal [p-title]="nomeprospect">
+
+    <po-dynamic-view [p-fields]="prospectField" [p-value]="prospectData"/>
+
+</po-modal>

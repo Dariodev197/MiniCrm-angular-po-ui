@@ -1,0 +1,10 @@
+<!-- ✅ po-page gerencia o espaço respeitando o menu -->
+<po-page-default p-title="Novo Prospect">
+  <po-dynamic-form #formNewProspect [p-fields]="fields"/>
+  
+  <div class="po-row">
+    <po-button class="po-md-3"
+      p-label="Confirmar"
+      (p-click)="ConfirmeForm(formNewProspect.form.value)"/>
+  </div>
+</po-page-default>

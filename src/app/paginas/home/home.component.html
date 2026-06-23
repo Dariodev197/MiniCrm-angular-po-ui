@@ -1,1 +1,9 @@
-<p>home works!</p>
+<po-page-default p-title="Dashboard" [p-breadcrumb]="{items: [{label: 'Home',link: ''}, 
+ {label: 'Dashboard'}]}">
+    <po-widget p-title="Orcamentos" class="po-lg-6" p-primary-label="Detalhes" (p-primary-action)="viewDetail()">
+        <po-chart [p-type]="chartBarras" [p-series]="orcamentos"></po-chart>
+    </po-widget>
+    <po-widget p-title="Pedidos" class="po-lg-6" p-primary-label="Detalhes" (p-primary-action)="viewDetail()">
+        <po-chart [p-type]="chartPizza" [p-series]="pedidos"></po-chart>
+    </po-widget>
+</po-page-default>
